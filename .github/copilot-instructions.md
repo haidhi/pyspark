@@ -1,54 +1,47 @@
-# Copilot / AI Agent Instructions — Starter
+﻿# Copilot / AI Agent Instructions
 
 > Purpose: give AI coding agents just enough, focused context to be immediately productive in this repository. Keep it short and concrete — no generic advice.
 
-## ✅ High-level summary
-- This repository implements PySpark data processing jobs and related tooling (expected). If this is incorrect, update this section with the actual project purpose.
-- Primary languages: **Python** (+ PySpark). Primary runtime: **Spark** (local / cluster via spark-submit).
+##  High-level summary
+- This repository contains progressive learning examples for Python and PySpark, from basics (L1) to advanced data engineering concepts (L3).
+- Primary languages: **Python** (+ PySpark). Primary runtime: **Python interpreter** for basic scripts, **Apache Spark** (local) for PySpark examples.
 
-## 🔧 How to run locally (expected commands)
-- Run a Spark job locally (example):
+##  How to run locally (expected commands)
+- Run Python examples:
   ```bash
-  ./bin/spark-submit --master local[4] --py-files dist/package.zip src/main.py arg1 arg2
+  python python_L1.py
   ```
-- Run tests (expected):
+- Run PySpark examples (requires PySpark and Java installed):
   ```bash
-  pip install -r requirements.txt
-  pytest -q
+  python pyspark_L1.py
   ```
-- Build packaging (if present):
-  ```bash
-  python -m build    # or setup.py sdist bdist_wheel
-  ```
+- No build, test, or packaging commands present.
 
-> If your repository uses Docker, Airflow, or a different test runner, replace the examples above with the commands found in the repo (e.g., `docker-compose up`, `airflow dags test`, `tox`).
+##  Project layout notes (where to look and what matters)
+- Source code: all example scripts are in the root directory, named `python_LX.py` for Python concepts and `pyspark_LX.py` for PySpark examples (X = level).
+- Data files: `data.json` and `sample.txt` provide sample data for examples.
+- Libraries reference: `python_libraries.py` demonstrates common Python libraries with fallbacks.
+- No dedicated tests, config, or build directories.
 
-## 🧭 Project layout notes (where to look and what matters)
-- Source code: look for `src/`, `package_name/`, or `jobs/` for primary Spark job entrypoints (files like `main.py`, `job_*.py`).
-- Tests: look for `tests/` or `integration_tests/`. Prefer using `pytest` flags such as `-k` to run a subset.
-- Config: check for `conf/`, `config/*.yaml` or environment variables (.env). Treat config as authoritative.
-- Jobs and submission: check for `scripts/` or `bin/` wrappers that call `spark-submit` — prefer using existing wrappers.
+##  Common patterns to follow in this repo
+- Standalone scripts without CLI arguments or external configuration.
+- For PySpark scripts, initialize `SparkSession` explicitly with `SparkSession.builder.appName(...).getOrCreate()` and call `spark.stop()` at the end.
+- Progress from basic syntax in L1 to advanced features like logging, type hints, and generators in L3.
+- Use `logging` module instead of `print` for output in advanced examples.
+- Implement library fallbacks with try-except blocks when demonstrating optional dependencies, as in `python_libraries.py`.
+- Use `if __name__ == "__main__":` guard for main execution in production-style scripts.
 
-## 🧩 Common patterns to follow in this repo
-- Prefer explicit Spark/session configuration via `SparkSession.builder.appName(...).config(...)` (avoid implicit global side effects).
-- Jobs should accept CLI args and/or a config file; prefer `argparse` or `click` for consistent parsing.
-- I/O should use stable storage paths (S3/HDFS) or `data/` for local testing. When creating temporary files, use `tmp/` or the system temp directory.
+##  PR guidance for Copilot / AI agents
+- As a learning repository, contributions typically add new examples or expand existing levels.
+- Follow naming conventions: `python_LX.py` or `pyspark_LX.py` for new levels.
+- Include comments explaining concepts, as seen in `python_L3.py`.
 
-## ✅ PR guidance for Copilot / AI agents
-- Limit changes to a single logical concern per PR.
-- When adding or changing a job, include a minimal end-to-end test (pytest) that runs a small dataset locally with `local[*]` Spark master.
-- Mention any runtime assumptions (Spark version, Python version) in the PR description.
+##  Debugging tips specific to this project (if present)
+- For PySpark scripts, ensure Java is installed and `JAVA_HOME` is set; install PySpark via `pip install pyspark`.
+- Check console output or `app.log` (created by logging in L3) for errors.
+- Examples are designed for local execution; no cluster setup required.
 
-## 🔍 Debugging tips specific to this project (if present)
-- Reproduce locally with a small sample file in `tests/fixtures/` and run the job with `--master local[2]`.
-- Check Spark logs (stderr/stdout) for executor and driver stack traces. Use `--conf spark.executor.memory=1g` to constrain resource usage when debugging locally.
-
-## 📁 Files & patterns to reference when updating these instructions
-- Add concrete examples from these files if they exist: `README.md`, `scripts/run_job.sh`, `bin/spark-submit`, `tests/test_*.py`, `conf/*.yaml`, `Dockerfile`, `.github/workflows/*`.
-
-## 📝 When merging this file
-- If a `.github/copilot-instructions.md` already exists, preserve any repository-specific examples and run commands; append missing sections from this file and call that out in the PR.
-
----
-
-If you want, point me to any key files (entrypoints, CI, or config) and I will update these instructions with concrete examples (commands, file paths, and tests) so agents can operate with no hand-holding.
+##  Files & patterns to reference when updating these instructions
+- `pyspark_L1.py` for basic Spark session and DataFrame creation.
+- `python_L3.py` for advanced patterns like logging and type hints.
+- `python_libraries.py` for library usage and fallback implementations.
